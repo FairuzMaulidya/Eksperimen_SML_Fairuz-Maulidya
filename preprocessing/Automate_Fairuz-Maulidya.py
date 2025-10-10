@@ -53,7 +53,7 @@ def automate_preprocess(dataset, target, save_path, file_path):
 #Menjalankan Fungsinya
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    dataset_path = os.path.join(base_dir, "C:/Users/Hp/Downloads/SMSML_Fairuz-Maulidya/StudentsPerformance_raw.csv")
+    dataset_path = os.path.join(base_dir, "..", "StudentsPerformance_raw.csv")
     save_path = os.path.join(base_dir, "StudentsPerformance_preprocessing.joblib")
     file_path = os.path.join(base_dir, "Column-StudentsPerformance_preprocessing.csv")
 
