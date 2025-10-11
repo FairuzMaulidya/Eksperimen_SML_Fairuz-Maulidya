@@ -1,33 +1,31 @@
-#Import Library
+# Import Library
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.impute import SimpleImputer
 from joblib import dump
 import pandas as pd
 import os
 
-#Melakukan proses automate preprocessing
+# Melakukan proses automate preprocessing
 def automate_preprocess(dataset, target, save_path, file_path):
+    # Membuat kolom status berdasarkan rata-rata nilai
     dataset['status'] = dataset[['math score', 'reading score', 'writing score']].mean(axis=1)
     dataset['status'] = dataset['status'].apply(lambda x: 'Failed' if x <= 60 else 'Pass')
 
-    column= dataset.columns.drop(target)
-    df_head= pd.DataFrame(columns=column)
+    column = dataset.columns.drop(target)
+    df_head = pd.DataFrame(columns=column)
     df_head.to_csv(file_path, index=False)
     print(f"Nama kolom berhasil disimpan ke: {file_path}")
 
-    student_num = ['math score', 'reading score', 'writing score']
-    student_cat= [col for col in dataset.select_dtypes(include='object').columns if col != target]
+    student_cat = dataset.select_dtypes(include='object').drop(columns=[target], errors='ignore').columns
+    student_num = dataset.select_dtypes(include='number').columns
 
-    num_transform= Pipeline(steps=[
-        ('imputer', SimpleImputer(strategy='mean')),
+    num_transform = Pipeline(steps=[
         ('scaler', MinMaxScaler())
     ])
 
     cat_transform = Pipeline(steps=[
-        ('imputer', SimpleImputer(strategy='constant', fill_value='missing')),
         ('encoder', OneHotEncoder(handle_unknown='ignore'))
     ])
 
@@ -40,8 +38,9 @@ def automate_preprocess(dataset, target, save_path, file_path):
 
     X = dataset.drop(columns=[target])
     y = dataset[target]
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
     X_train = preprocessor.fit_transform(X_train)
     X_test = preprocessor.transform(X_test)
@@ -50,7 +49,7 @@ def automate_preprocess(dataset, target, save_path, file_path):
 
     return X_train, X_test, y_train, y_test
 
-#Menjalankan Fungsinya
+# Menjalankan Fungsinya
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
     dataset_path = os.path.join(base_dir, "..", "StudentsPerformance_raw.csv")
