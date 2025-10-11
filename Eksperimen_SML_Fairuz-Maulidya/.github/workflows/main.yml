@@ -38,3 +38,4 @@ jobs:
       - name: Run Preprocessing
         run: |
           python preprocessing/Automate_Fairuz-Maulidya.py
+        
