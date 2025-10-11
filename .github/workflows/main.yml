@@ -1,0 +1,41 @@
+name: Eksperimen_SML_Fairuz-Maulidya
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  DATASET_PATH: "StudentsPerformance_raw.csv"
+  TARGET: "status"
+  SAVE_PATH: "preprocessing/StudentsPerformance_preprocessing.joblib"
+  FILE_PATH: "preprocessing/Column-StudentsPerformance_preprocessing.csv"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.13.5"
+
+      - name: Check Env
+        run: |
+          echo $DATASET_PATH
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas scikit-learn joblib
+          
+      - name: Run Preprocessing
+        run: |
+          python preprocessing/Automate_Fairuz-Maulidya.py
+        
