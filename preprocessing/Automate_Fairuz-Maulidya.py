@@ -7,7 +7,7 @@ from joblib import dump
 import pandas as pd
 import os
 
-def automate_preprocess(dataset, save_path, file_path, after_path): 
+def automate_preprocess(dataset, save_path, file_path): 
     #Melakukan bining untuk menentukan target
     student['status'] = student[['math score','reading score','writing score']].mean(axis=1).apply(lambda x: 'Failed' if x <= 60 else 'Pass')
 
